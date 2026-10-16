@@ -1,0 +1,24 @@
+# Core (versions are the ones the implementation was developed and tested with)
+torch>=2.4            # tested: 2.14.1 (CUDA 13.0 wheel, run on CPU)
+numpy>=1.26           # tested: 2.5.3
+scipy>=1.11           # tested: 1.18.1
+soundfile>=0.12       # tested: 0.14.0
+PyYAML>=6.0
+pandas>=2.0
+matplotlib>=3.8
+# Evaluation
+pyannote.metrics>=3.2 # DER (tested 4.1)
+# Interface
+fastapi>=0.110
+python-multipart>=0.0.9
+uvicorn>=0.29
+# Synthetic development corpus (eSpeak NG, GPL-3)
+espeakng-loader>=0.2
+# Building the C++/CUDA extension
+ninja>=1.11
+# Tests
+pytest>=8.0
+httpx>=0.27
+jiwer>=3.0            # cross-check only
+# Optional: pretrained baseline (needs a local checkpoint)
+# transformers>=4.40

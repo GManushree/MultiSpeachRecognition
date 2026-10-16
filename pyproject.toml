@@ -1,0 +1,15 @@
+[project]
+name = "gpu-resident-multispeaker-asr"
+version = "0.1.0"
+description = "Multi-speaker ASR with a GPU-resident diarization-separation-recognition pipeline"
+requires-python = ">=3.10"
+readme = "README.md"
+license = { text = "MIT" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q -p no:cacheprovider"
+filterwarnings = ["ignore::DeprecationWarning", "ignore:.*nested tensors.*:UserWarning"]
+
+[tool.setuptools.packages.find]
+include = ["src*"]

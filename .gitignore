@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+build/
+data/
+checkpoints/
+results/*
+!results/.gitkeep
+!results/benchmark/
+!results/eval/
+*.tmp
+.env
