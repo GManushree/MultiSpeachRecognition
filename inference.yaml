@@ -1,0 +1,26 @@
+defaults: [model.yaml]
+device: auto
+checkpoint: checkpoints/joint.pt
+lm_checkpoint: checkpoints/lm.pt
+precision: fp32               # fp32 | fp16 (CUDA) | bf16
+pipeline:
+  mode: resident              # resident | cascaded
+  fixed_capacity: true        # true: process all capacity streams masked (no host sync on K_hat)
+  exist_threshold: 0.5
+  uncertainty_margin: 0.15
+  activity_threshold: 0.5
+  timestamp_source: diarization # diarization | ctc (CTC emission times of this recogniser are unreliable)
+  decoder: device_nbest       # device_nbest | beam (host prefix beam search) | greedy
+  beam_width: 8
+  n_best: 8
+  n_flip: 3
+  rescore: {w_ac: 1.0, w_lm: 0.3, w_len: 0.0, n_streams: 3, mode: batched}
+  merge_gap_s: 0.6
+streaming:
+  block_s: 2.0
+  hop_s: 2.0
+  left_context_s: 2.0
+  speaker_match_threshold: 0.6
+api:
+  max_upload_mb: 25
+  max_duration_s: 600

@@ -1,0 +1,8 @@
+# Architecture shared by training, inference and evaluation.
+model:
+  features: {sample_rate: 16000, n_fft: 400, hop: 160, n_mels: 80, use_fused_kernel: false}
+  stdn: {n_mels: 80, d_model: 256, n_heads: 4, n_layers: 4, ff_dim: 1024, dropout: 0.1, max_speakers: 3}
+  separator: {enc_dim: 128, kernel: 32, stride: 16, bottleneck: 128, hidden: 256, n_blocks: 4,
+              n_repeats: 2, cond_dim: 256}
+  asr: {n_mels: 80, d_model: 192, n_heads: 4, n_layers: 4, ff_dim: 768, conv_ch: 64, dropout: 0.1, vocab_size: 29}
+  lm: {vocab_size: 29, emb: 64, hidden: 256, layers: 2, dropout: 0.1}

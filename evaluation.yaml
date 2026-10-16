@@ -1,0 +1,6 @@
+defaults: [inference.yaml]
+manifests:
+  test: data/synthetic/test.jsonl
+der: {collar: 0.25, skip_overlap: false}
+out_dir: results/eval
+max_items: null

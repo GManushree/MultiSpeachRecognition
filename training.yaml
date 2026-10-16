@@ -1,0 +1,42 @@
+defaults: [model.yaml]
+seed: 1234
+device: auto
+data:
+  root: data/synthetic
+  synthetic:
+    seed: 7
+    sample_rate: 16000
+    n_speakers: 36            # split speaker-disjoint 24 / 6 / 6
+    n_mixtures: {train: 3000, val: 150, test: 200}
+    k_probs: {0: 0.05, 1: 0.25, 2: 0.45, 3: 0.25}
+    overlap_range: [0.0, 0.6]
+    gain_db: 5.0
+    noise_snr_db: 30.0
+    ablation_sets:
+      - {k: 2, overlap: 0.0, n: 60}
+      - {k: 2, overlap: 0.2, n: 60}
+      - {k: 2, overlap: 0.4, n: 60}
+      - {k: 2, overlap: 0.6, n: 60}
+      - {k: 1, overlap: 0.3, n: 60}
+      - {k: 3, overlap: 0.3, n: 60}
+      - {k: 2, overlap: 0.3, n: 60}
+  ami: {root: null, mic: Mix-Headset, window_s: 8.0}      # set root to enable
+  chime7: {root: null, scenario: chime6, split: dev}      # set root to enable
+out_dir: checkpoints
+log_dir: results/train_logs
+num_workers: 1
+stages:
+  # Staged training: each stage starts from the previous stage's checkpoint.
+  lm:          {epochs: 6, batch_size: 64, lr: 2.0e-3}
+  diarization: {steps: 2500, batch_size: 8, lr: 5.0e-4, warmup: 200, use: {diar: true}, freeze: [separator, asr]}
+  asr:         {steps: 3000, batch_size: 16, lr: 1.0e-3, warmup: 300}
+  separation:  {steps: 2100, batch_size: 4, lr: 1.0e-3, warmup: 60, crop_s: 3.0, use: {sep: true}, freeze: [stdn, asr]}
+  asr_adapt:   {steps: 1000, batch_size: 4, lr: 3.0e-4, warmup: 50, eval_every: 250, use: {asr: true}, freeze: [stdn, separator],
+                weights: {lambda_asr_clean: 1.0}}
+  joint:       {steps: 400, batch_size: 1, lr: 3.0e-5, warmup: 25, eval_every: 200, use: {diar: true, sep: true, asr: true}, freeze: [],
+                weights: {lambda_asr_clean: 1.0}}
+weights: {lambda_sep: 1.0, lambda_diar: 1.0, lambda_asr: 1.0, lambda_asr_clean: 0.0, assign_diar: 1.0, assign_sep: 0.05}  # stages may override
+precision: fp32               # fp16 mixed precision on CUDA (GradScaler); bf16 allowed on CPU
+grad_clip: 5.0
+eval_every: 250                # default; a stage may override it
+early_stopping_patience: 6    # evaluations without validation improvement

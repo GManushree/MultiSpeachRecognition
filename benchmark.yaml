@@ -1,0 +1,8 @@
+defaults: [inference.yaml]
+manifest: data/synthetic/test.jsonl
+n_items: 20
+repeats: 3
+warmup: 2
+block_sizes_s: [0.5, 1.0, 2.0, 4.0]
+latency_block_s: 0.5
+out_dir: results/benchmark
